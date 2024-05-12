@@ -1,7 +1,11 @@
 const express = require("express");
+require("dotenv").config();
 
 const app = express();
 
+app.use('/api/auth', require('./controllers/auth'));
+
+app.use('/api/users', require('./controllers/users'));
 app.get("/", (req, res) => {
   res.send("Express on Vercel");
 });
