@@ -8,4 +8,8 @@ router.get('/users', (req, res) => {
   res.send('Express on Vercel')
 })
 
+router.post('/users', (req, res) => {
+    res.send('Express on Vercel')
+})
+
 module.exports = router;
