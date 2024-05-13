@@ -4,11 +4,11 @@ const getDB = require('../config/db');
 
 const db = getDB();
 
-router.get('/users', (req, res) => {
+router.get('/', (req, res) => {
   res.send('Express on Vercel')
 })
 
-router.post('/users', (req, res) => {
+router.post('/', (req, res) => {
     res.send('Express on Vercel')
 })
 
