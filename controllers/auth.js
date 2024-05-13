@@ -3,6 +3,7 @@ const router = express.Router();
 const userModel = require('../schemas/users');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const mail = require('../mail/sendmail');
 
 router.post('/login', async (req, res) => {
   const loginDetail = req.body;
@@ -112,5 +113,45 @@ router.post('/register', async (req, res) => {
       res.json({'message': 'Something went wrong'});
     }
 })
+
+router.post('/logout', async (req, res) => {
+  res.clearCookie('jwt');
+  res.json({'message': 'Logged out'});
+})
+
+router.post('/resetpass', async (req, res) => {
+
+  const body = req.body;
+  if(!body.email){
+    return res.status(400).json({'message': 'Email is required'});
+  }
+
+  var user = await userModel.findOne({email: body.email});
+  if(!user){
+    res.status(403).json({'message': 'Invalid email'});
+    return;
+  }
+  var password = makeid(8);
+  await userModel.findByIdAndUpdate({_id: user._id}, {password: await bcrypt.hash(password, 10)})
+  await mail.sendMail({
+    from: '"Express js" <satheshs.sat@gmail.com>', // sender address
+    to: user.email, // list of receivers
+    subject: "Password Reset", // Subject line
+    text: "Your New Password is "+password, // plain text body
+  })
+  res.json({'message': 'Mail send'});
+})
+
+function makeid(length) {
+  let result = '';
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  const charactersLength = characters.length;
+  let counter = 0;
+  while (counter < length) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    counter += 1;
+  }
+  return result;
+}
 
 module.exports = router;
