@@ -8,6 +8,7 @@ let userSchema = new mongoose.Schema({
         unique: true,
         lowercase: true,
     },
+    role: String,
     password: String,
     createdby: String,
     createdat: { type: Date, default: Date.now },

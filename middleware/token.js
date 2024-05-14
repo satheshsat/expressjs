@@ -14,6 +14,14 @@ function validateToken(req, res, next) {
                 message: 'Token is not valid'
             });
             }
+            if(decoded.role=='user'){
+                if(req.originalUrl.indexOf('/api/users') !== -1){
+                    return res.status(403).json({
+                        success: false,
+                        message: 'Token is not valid1'
+                    });
+                }
+            }
             req.decoded = decoded;
             next();
         });

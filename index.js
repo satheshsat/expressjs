@@ -12,9 +12,9 @@ app.use(cookieparser());
 
 app.use('/api/auth', require('./controllers/auth'));
 
-app.use('/api/users', tokenMiddleware.validateToken);
+// app.use('/api/users', tokenMiddleware.validateToken);
 
-app.use('/api/users', require('./controllers/users'));
+app.use('/api/users', tokenMiddleware.validateToken, require('./controllers/users'));
 app.get("/", (req, res) => {
   res.send("Express on Vercel");
 });

@@ -26,7 +26,8 @@ router.post('/login', async (req, res) => {
       //creating a access token
       const accessToken = jwt.sign({
           name: user.name,
-          email: user.email
+          email: user.email,
+          role: user.role
       }, process.env.ACCESS_TOKEN_SECRET, {
           expiresIn: '10m'
       });
@@ -36,7 +37,8 @@ router.post('/login', async (req, res) => {
       const refreshToken = jwt.sign({
           _id: user._id,
           name: user.name,
-          email: user.email
+          email: user.email,
+          role: user.role
       }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '1d' });
 
       // Assigning refresh token in http-only cookie 
@@ -69,7 +71,8 @@ router.post('/refresh', async (req, res) => {
             // Correct token we send a new access token
             const accessToken = jwt.sign({
                 name: decoded.name,
-                email: decoded.email
+                email: decoded.email,
+                role: decoded.role
             }, process.env.ACCESS_TOKEN_SECRET, {
                 expiresIn: '10m'
             });
@@ -102,6 +105,7 @@ router.post('/register', async (req, res) => {
       var result = await userModel.create({
         name: userData.name,
         email: userData.email,
+        role: 'user',
         password: await bcrypt.hash(userData.password, 10),
         createdby: 'sys',
         modifiedby: 'sys',
