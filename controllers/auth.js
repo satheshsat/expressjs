@@ -22,7 +22,7 @@ router.post('/login', async (req, res) => {
     return;
   }
 
-  if(bcrypt.compare(loginDetail.password, user.password)){
+  if(await bcrypt.compare(loginDetail.password, user.password)){
       //creating a access token
       const accessToken = jwt.sign({
           name: user.name,
