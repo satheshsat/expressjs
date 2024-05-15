@@ -3,6 +3,12 @@ const jwt = require('jsonwebtoken');
 function validateToken(req, res, next) {
     let token = req.headers['x-access-token'] || req.headers['authorization']; 
 
+    if(!token) {
+        return res.status(403).json({
+            success: false,
+            message: 'Token is required'
+        });
+    }
     // Remove Bearer from string
     token = token.replace(/^Bearer\s+/, "");
 
