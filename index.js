@@ -1,5 +1,8 @@
 const express = require("express");
 var cors = require('cors');
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
+const hpp = require('hpp');
 require("dotenv").config();
 require('./config/db');
 const cookieparser = require('cookie-parser');
@@ -7,6 +10,14 @@ const tokenMiddleware = require('./middleware/token');
 
 const app = express();
 
+const limiter = rateLimit({
+  windowMs: 1 * 60 * 1000, // 15 minutes
+	limit: 60, // Limit each IP to 100 requests per `window` (here, per 15 minutes).
+});
+
+app.use(limiter);
+app.use(hpp());
+app.use(helmet());
 app.use(cors())
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
