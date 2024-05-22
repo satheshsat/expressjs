@@ -29,7 +29,7 @@ router.post('/login', async (req, res) => {
           email: user.email,
           role: user.role
       }, process.env.ACCESS_TOKEN_SECRET, {
-          expiresIn: '10m'
+          expiresIn: '1m'
       });
       // Creating refresh token not that expiry of refresh 
       //token is greater than the access token
@@ -47,18 +47,21 @@ router.post('/login', async (req, res) => {
           sameSite: 'None', secure: true,
           maxAge: 24 * 60 * 60 * 1000
       });
-      return res.json({message: 'success', data: user, accessToken });
+      return res.json({message: 'success', data: user, accessToken, refreshToken });
   }else{
     res.status(403).json({'message': 'Invalid password'});
   }
 })
 
 router.post('/refresh', async (req, res) => {
-  if (!req.cookies?.jwt) {
+  if (!req.cookies?.jwt && !req.body.refreshToken) {
     return res.status(403).json({ error: "token_expired", message: 'Unauthorized' });
   }
 
-  const refreshToken = req.cookies.jwt;
+  let refreshToken = req.cookies.jwt;
+  if(!refreshToken){
+    refreshToken = req.body.refreshToken;
+  }
 
   jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET,
     (err, decoded) => {
