@@ -29,7 +29,7 @@ router.post('/login', async (req, res) => {
           email: user.email,
           role: user.role
       }, process.env.ACCESS_TOKEN_SECRET, {
-          expiresIn: '1m'
+          expiresIn: '10m'
       });
       // Creating refresh token not that expiry of refresh 
       //token is greater than the access token
@@ -77,7 +77,7 @@ router.post('/refresh', async (req, res) => {
                 email: decoded.email,
                 role: decoded.role
             }, process.env.ACCESS_TOKEN_SECRET, {
-                expiresIn: '1m'
+                expiresIn: '10m'
             });
             return res.json({ accessToken });
         }
