@@ -77,7 +77,7 @@ router.post('/refresh', async (req, res) => {
                 email: decoded.email,
                 role: decoded.role
             }, process.env.ACCESS_TOKEN_SECRET, {
-                expiresIn: '10m'
+                expiresIn: '1m'
             });
             return res.json({ accessToken });
         }
