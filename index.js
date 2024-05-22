@@ -7,6 +7,10 @@ require("dotenv").config();
 require('./config/db');
 const cookieparser = require('cookie-parser');
 const tokenMiddleware = require('./middleware/token');
+const swaggerJSDoc = require('swagger-jsdoc');
+const swaggerUi = require('swagger-ui-express');
+const basicAuth = require('express-basic-auth');
+
 // const cluster = require('cluster');
 // const os = require('os');
 // const numCPUs = os.cpus().length;
@@ -39,6 +43,56 @@ app.use(cors())
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieparser()); 
+
+const options = {
+  definition: {
+    openapi: '3.0.0',
+    info: {
+      title: 'Your API Title',
+      version: '1.0.0',
+      description: 'Your API description',
+      license: {
+        name: 'Licensed Under MIT',
+        // url: 'https://spdx.org/licenses/MIT.html',
+      },
+      contact: {
+        name: 'Sathesh',
+        url: 'https://satheshsat.github.io',
+      },
+    },
+    servers: [
+      {
+        url: 'http://localhost:3000',
+        description: 'Development server',
+      },
+      {
+        url: 'https://expressjs-murex.vercel.app',
+        description: 'Production server',
+      }
+    ],
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT',
+        },
+      },
+    },
+    security: [
+      {
+        bearerAuth: [],
+      },
+    ],
+  },
+  apis: ['./controllers/*.js'], // Path to your API documentation files
+};
+
+const swaggerSpec = swaggerJSDoc(options);
+app.use('/api-docs', basicAuth({
+  users: {'admin': 'password'},
+  challenge: true,
+}), swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.use('/api/auth', require('./controllers/auth'));
 
