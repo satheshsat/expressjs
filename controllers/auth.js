@@ -55,7 +55,7 @@ router.post('/login', async (req, res) => {
 
 router.post('/refresh', async (req, res) => {
   if (!req.cookies?.jwt) {
-    return res.status(403).json({ message: 'Unauthorized' });
+    return res.status(403).json({ error: "token_expired", message: 'Unauthorized' });
   }
 
   const refreshToken = req.cookies.jwt;
