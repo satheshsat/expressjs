@@ -10,7 +10,7 @@ const tokenMiddleware = require('./middleware/token');
 const swaggerJSDoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
 const basicAuth = require('express-basic-auth');
-var geoip = require('geoip-lite');
+// var geoip = require('geoip-lite');
 
 // const cluster = require('cluster');
 // const os = require('os');
@@ -32,7 +32,7 @@ var geoip = require('geoip-lite');
 
 const app = express();
 
-app.set('trust proxy', true);
+// app.set('trust proxy', true);
 
 const limiter = rateLimit({
   windowMs: 1 * 60 * 1000, // 15 minutes
