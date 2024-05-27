@@ -105,9 +105,9 @@ app.use('/api/users', tokenMiddleware.validateToken, require('./controllers/user
 app.use('/api/profile', tokenMiddleware.validateToken, require('./controllers/profile'));
 app.get("/", (req, res) => {
   const clientIp = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-  var geo = geoip.lookup(clientIp);
-  res.send(`Your IP address is ${clientIp} and  ${JSON.stringify(geo)}`);
-  // res.send("Express on Vercel");
+  // var geo = geoip.lookup(clientIp);
+  // res.send(`Your IP address is ${clientIp} and  ${JSON.stringify(geo)}`);
+  res.send("Express on Vercel");
 });
 
 app.listen(5000, () => {
