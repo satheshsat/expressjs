@@ -10,6 +10,7 @@ const tokenMiddleware = require('./middleware/token');
 const swaggerJSDoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
 const basicAuth = require('express-basic-auth');
+var geoip = require('geoip-lite');
 
 // const cluster = require('cluster');
 // const os = require('os');
@@ -30,6 +31,8 @@ const basicAuth = require('express-basic-auth');
 // }
 
 const app = express();
+
+app.set('trust proxy', true);
 
 const limiter = rateLimit({
   windowMs: 1 * 60 * 1000, // 15 minutes
@@ -101,7 +104,10 @@ app.use('/api/auth', require('./controllers/auth'));
 app.use('/api/users', tokenMiddleware.validateToken, require('./controllers/users'));
 app.use('/api/profile', tokenMiddleware.validateToken, require('./controllers/profile'));
 app.get("/", (req, res) => {
-  res.send("Express on Vercel");
+  const clientIp = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+  var geo = geoip.lookup(clientIp);
+  res.send(`Your IP address is ${clientIp} and  ${JSON.stringify(geo)}`);
+  // res.send("Express on Vercel");
 });
 
 app.listen(5000, () => {
