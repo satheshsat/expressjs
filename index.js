@@ -10,6 +10,9 @@ const tokenMiddleware = require('./middleware/token');
 const swaggerJSDoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
 const basicAuth = require('express-basic-auth');
+const fs = require('fs');
+const path = require('path')
+const formidable = require('formidable');
 // var geoip = require('geoip-lite');
 
 // const cluster = require('cluster');
@@ -109,6 +112,25 @@ app.get("/", (req, res) => {
   // res.send(`Your IP address is ${clientIp} and  ${JSON.stringify(geo)}`);
   res.send("Express on Vercel");
 });
+
+app.post('/file', (req, res) => {
+
+    const form = new formidable.IncomingForm();
+    form.parse(req, function (err, fields, files) {
+
+        let oldPath = files.file[0].filepath;
+        let newPath = path.join(__dirname, 'public')
+            + '/' + files.file[0].originalFilename
+        let rawData = fs.readFileSync(oldPath)
+
+        fs.writeFile(newPath, rawData, function (err) {
+            if (err) console.log(err)
+            // return res.send("Successfully uploaded")
+        return res.json(files);
+        })
+    })
+    // res.json('hello')
+})
 
 app.listen(5000, () => {
   console.log("Running on port 5000.");
