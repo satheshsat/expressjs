@@ -10,8 +10,8 @@ const tokenMiddleware = require('./middleware/token');
 const swaggerJSDoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
 const basicAuth = require('express-basic-auth');
-const fs = require('fs');
-const path = require('path')
+// const fs = require('fs');
+// const path = require('path')
 // const formidable = require('formidable');
 // var geoip = require('geoip-lite');
 
